@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0A0E14">
+<title>{% block title %}Trackside{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+  /* Shared helpers live in <head> so any page's inline <script> can call them
+     during initial parse -- not only after the whole body has finished. */
+
+  function showToast(message, type) {
+    type = type || 'info';
+    const stack = document.getElementById('toastStack');
+    if (!stack) return;
+    const css = getComputedStyle(document.documentElement);
+    const colors = {
+      info: css.getPropertyValue('--accent').trim(),
+      good: css.getPropertyValue('--green').trim(),
+      warn: css.getPropertyValue('--yellow').trim(),
+      bad:  css.getPropertyValue('--red').trim()
+    };
+    const el = document.createElement('div');
+    el.textContent = message;
+    el.style.cssText =
+      'background: var(--panel-elevated); color: var(--ink); border: 1px solid var(--line); ' +
+      'border-left: 3px solid ' + (colors[type] || colors.info) + '; ' +
+      'padding: 10px 16px; border-radius: 8px; font-size: 13px; ' +
+      'box-shadow: 0 6px 20px rgba(0,0,0,0.4); ' +
+      'opacity: 0; transform: translateY(8px); ' +
+      'transition: opacity 0.2s ease, transform 0.2s ease;';
+    stack.appendChild(el);
+    requestAnimationFrame(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; });
+    setTimeout(() => {
+      el.style.opacity = '0'; el.style.transform = 'translateY(8px)';
+      setTimeout(() => el.remove(), 250);
+    }, 3500);
+  }
+
+  function renderComponentChart(canvasId, c, opts) {
+    opts = opts || {};
+    if (typeof Chart === 'undefined') {
+      console.error('Chart.js failed to load -- cannot render chart for', canvasId);
+      return null;
+    }
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) {
+      console.warn('No canvas found for id:', canvasId);
+      return null;
+    }
+    const css = getComputedStyle(document.documentElement);
+    const red = css.getPropertyValue('--red').trim();
+    const green = css.getPropertyValue('--green').trim();
+    return new Chart(canvas, {
+      type: 'line',
+      data: {
+        labels: c.days,
+        datasets: [
+          {
+            label: 'This ' + c.type + ' (recent)',
+            data: c.test_curve,
+            borderColor: red,
+            backgroundColor: 'rgba(229,96,77,0.10)',
+            fill: true,
+            tension: 0.25,
+            borderWidth: 2,
+            pointRadius: 0
+          },
+          {
+            label: 'Fleet normal',
+            data: c.safe_curve,
+            borderColor: green,
+            backgroundColor: 'transparent',
+            tension: 0.25,
+            borderDash: [5, 4],
+            borderWidth: 1.5,
+            pointRadius: 0
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        animation: { duration: 500 },
+        plugins: {
+          legend: {
+            display: !!opts.legend,
+            labels: { color: '#E8ECF1', font: { family: 'IBM Plex Mono', size: 11 } }
+          }
+        },
+        scales: {
+          x: {
+            display: !!opts.showX,
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            ticks: { color: '#7C8A9C', font: { family: 'IBM Plex Mono', size: 10 } }
+          },
+          y: {
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            ticks: { color: '#7C8A9C', font: { family: 'IBM Plex Mono', size: 10 } }
+          }
+        }
+      }
+    });
+  }
+</script>
+</head>
+<body class="hazard-{{ hazard_status or 'green' }}">
+<div class="hazard-bar"></div>
+{% if session.get('username') %}
+<nav class="topnav">
+  <a href="{{ url_for('home') }}" class="topnav-brand">Trackside</a>
+  <div class="topnav-links">
+    <a href="{{ url_for('ps3_door') }}" class="topnav-link {{ 'active' if request.endpoint == 'ps3_door' else '' }}">Door</a>
+    <a href="{{ url_for('ps3_acv') }}" class="topnav-link {{ 'active' if request.endpoint == 'ps3_acv' else '' }}">ACV</a>
+    <a href="{{ url_for('ps3_rail') }}" class="topnav-link {{ 'active' if request.endpoint == 'ps3_rail' else '' }}">Rail Corrugation</a>
+    <a href="{{ url_for('ps3_shm') }}" class="topnav-link {{ 'active' if request.endpoint == 'ps3_shm' else '' }}">SHM</a>
+    <a href="{{ url_for('logout') }}" class="topnav-link">Log out ({{ session['username'] }})</a>
+  </div>
+</nav>
+{% endif %}
+<main>
+{% block content %}{% endblock %}
+</main>
+
+<div id="toastStack" role="status" aria-live="polite" aria-atomic="true"
+     style="position:fixed; bottom:20px; right:20px; display:flex; flex-direction:column; gap:8px; z-index:2100;"></div>
+</body>
+</html>

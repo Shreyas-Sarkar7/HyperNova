@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}ACV Fault Localisation — Trackside{% endblock %}
+{% block content %}
+<h1>ACV Fault Localisation</h1>
+<p class="subtitle">NEBULA X PS3 &middot; upload a cabin temperature/telemetry file, find the likely faulty car</p>
+
+{% if error %}<p class="form-error">{{ error }}</p>{% endif %}
+
+<div class="auth-card" style="max-width:520px; margin: 1.5rem 0;">
+  <form method="post" enctype="multipart/form-data">
+    <label>ACV telemetry file (.xlsx or .csv)
+      <input type="file" name="data_file" accept=".xlsx,.xls,.csv" required>
+    </label>
+    <button type="submit" class="btn-primary">Analyze</button>
+  </form>
+</div>
+
+{% if ranked %}
+<p class="section-label">Result — {{ file_id }}</p>
+<div class="mrt-lines">
+  {% for car in ranked %}
+  <div class="mrt-line-card {{ 'status-red' if loop.first else '' }}">
+    <div class="mrt-line-left">
+      <span class="mrt-line-code">{{ loop.index }}</span>
+      <div class="mrt-line-info">
+        <span class="mrt-line-name">Car {{ car }}</span>
+        <span class="mrt-line-sub">{{ 'Most likely faulty' if loop.first else 'Rank ' ~ loop.index }}</span>
+      </div>
+    </div>
+    {% if loop.first %}
+    <span class="mrt-badge status-red"><span class="mrt-dot"></span>Top pick</span>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

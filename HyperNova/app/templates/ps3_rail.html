@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Rail Corrugation Detection — Trackside{% endblock %}
+{% block content %}
+<h1>Rail Corrugation Detection</h1>
+<p class="subtitle">NEBULA X PS3 &middot; upload axle-box vibration CSVs, classify Normal / Side I / Side II</p>
+
+{% if error %}<p class="form-error">{{ error }}</p>{% endif %}
+
+<div class="auth-card" style="max-width:520px; margin: 1.5rem 0;">
+  <form method="post" enctype="multipart/form-data">
+    <label>Vibration CSV file(s) &mdash; select all of them at once
+      <input type="file" name="data_files" accept=".csv" multiple required>
+    </label>
+    <button type="submit" class="btn-primary">Analyze</button>
+  </form>
+</div>
+
+{% if results %}
+<p class="section-label">Results</p>
+<p class="subtitle" style="margin-top:-8px;">
+  {{ results|length }} files &middot;
+  {% for label, n in counts.items() %}{{ label }}: {{ n }}{{ ", " if not loop.last }}{% endfor %}
+</p>
+
+<a class="btn-primary" href="{{ download_url }}" download style="display:inline-block; margin-bottom:14px;">Download rail_predictions.csv</a>
+
+<div style="overflow-x:auto;">
+<table style="width:100%; border-collapse:collapse; font-size:13px;">
+  <thead>
+    <tr style="text-align:left; border-bottom:1px solid var(--line); color:var(--muted);">
+      <th style="padding:8px 10px;">File</th>
+      <th style="padding:8px 10px;">Prediction</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in results %}
+    <tr style="border-bottom:1px solid var(--line);">
+      <td style="padding:8px 10px; font-family:var(--mono);">{{ row.file_id }}</td>
+      <td style="padding:8px 10px;">
+        {% if row.prediction == 'Normal' %}
+        <span class="badge green"><span class="dot"></span>{{ row.prediction }}</span>
+        {% elif row.prediction == 'Side I' %}
+        <span class="badge red"><span class="dot"></span>{{ row.prediction }}</span>
+        {% else %}
+        <span class="badge yellow"><span class="dot"></span>{{ row.prediction }}</span>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+{% endblock %}

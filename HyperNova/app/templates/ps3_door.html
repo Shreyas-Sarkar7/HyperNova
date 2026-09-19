@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Door Fault Detection — Trackside{% endblock %}
+{% block content %}
+<h1>Door Fault Detection</h1>
+<p class="subtitle">NEBULA X PS3 &middot; upload a continuous door-sensor stream, get each cycle classified</p>
+
+{% if error %}<p class="form-error">{{ error }}</p>{% endif %}
+
+<div class="auth-card" style="max-width:520px; margin: 1.5rem 0;">
+  <form method="post" enctype="multipart/form-data">
+    <label>Sensor data CSV
+      <input type="file" name="data_file" accept=".csv" required>
+    </label>
+    <button type="submit" class="btn-primary">Analyze</button>
+  </form>
+</div>
+
+{% if results %}
+<p class="section-label">Results</p>
+<p class="subtitle" style="margin-top:-8px;">
+  {{ results|length }} cycles found &middot;
+  <span style="color:var(--green-ink);">{{ n_normal }} Normal</span> &middot;
+  <span style="color:var(--red-ink);">{{ n_abnormal }} Abnormal resistance</span>
+</p>
+
+<a class="btn-primary" href="{{ download_url }}" download style="display:inline-block; margin-bottom:14px;">Download door_predictions.csv</a>
+
+<div style="overflow-x:auto;">
+<table style="width:100%; border-collapse:collapse; font-size:13px;">
+  <thead>
+    <tr style="text-align:left; border-bottom:1px solid var(--line); color:var(--muted);">
+      <th style="padding:8px 10px;">Start</th>
+      <th style="padding:8px 10px;">End</th>
+      <th style="padding:8px 10px;">Prediction</th>
+      <th style="padding:8px 10px;">Confidence</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in results %}
+    <tr style="border-bottom:1px solid var(--line);">
+      <td style="padding:8px 10px; font-family:var(--mono);">{{ row.start_time }}</td>
+      <td style="padding:8px 10px; font-family:var(--mono);">{{ row.end_time }}</td>
+      <td style="padding:8px 10px;">
+        <span class="badge {{ 'green' if row.prediction == 'Normal' else 'red' }}">
+          <span class="dot"></span>{{ row.prediction }}
+        </span>
+      </td>
+      <td style="padding:8px 10px; font-family:var(--mono);">{{ row.confidence }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+{% endblock %}

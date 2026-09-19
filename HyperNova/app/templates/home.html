@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Home — Trackside{% endblock %}
+{% block content %}
+<h1>Trackside</h1>
+<p class="subtitle">NEBULA X PS3 &middot; pick a subsystem to analyze</p>
+
+<div class="mrt-lines">
+  <a class="mrt-line-card" href="{{ url_for('ps3_door') }}">
+    <div class="mrt-line-left">
+      <span class="mrt-line-code">D</span>
+      <div class="mrt-line-info">
+        <span class="mrt-line-name">Door Fault Detection</span>
+        <span class="mrt-line-sub">Segments a continuous sensor stream into door cycles, classifies each Normal / Abnormal resistance</span>
+      </div>
+    </div>
+  </a>
+
+  <a class="mrt-line-card" href="{{ url_for('ps3_acv') }}">
+    <div class="mrt-line-left">
+      <span class="mrt-line-code">A</span>
+      <div class="mrt-line-info">
+        <span class="mrt-line-name">ACV Fault Localisation</span>
+        <span class="mrt-line-sub">Finds the most likely faulty car from cabin temperature &amp; telemetry</span>
+      </div>
+    </div>
+  </a>
+
+  <a class="mrt-line-card" href="{{ url_for('ps3_rail') }}">
+    <div class="mrt-line-left">
+      <span class="mrt-line-code">R</span>
+      <div class="mrt-line-info">
+        <span class="mrt-line-name">Rail Corrugation Detection</span>
+        <span class="mrt-line-sub">Classifies axle-box vibration readings as Normal / Side I / Side II</span>
+      </div>
+    </div>
+  </a>
+
+  <a class="mrt-line-card" href="{{ url_for('ps3_shm') }}">
+    <div class="mrt-line-left">
+      <span class="mrt-line-code">S</span>
+      <div class="mrt-line-info">
+        <span class="mrt-line-name">Structural Health Monitoring</span>
+        <span class="mrt-line-sub">Estimates cumulative fatigue damage from stress/vibration time series</span>
+      </div>
+    </div>
+  </a>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Trackside — PS3 Predictive Fault Detection{% endblock %}
+{% block content %}
+<div class="landing">
+  <span class="landing-tag">NEBULA X · PS3 Train Condition Monitoring</span>
+  <h1>Trackside</h1>
+  <p class="subtitle">Predictive rail &amp; rolling-stock fault detection.</p>
+
+  <div class="landing-track">
+    <svg viewBox="0 0 400 40" preserveAspectRatio="none" aria-hidden="true">
+      <path class="rail" d="M0 20 L400 20" />
+      <path class="rail" d="M0 26 L400 26" />
+      <path class="pulse" d="M0 20 L400 20" />
+    </svg>
+  </div>
+
+  <div class="landing-cta">
+    <a class="btn-primary" href="{{ url_for('login') }}">Worker Login &rarr;</a>
+  </div>
+</div>
+{% endblock %}

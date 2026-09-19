@@ -1,0 +1,24 @@
+{
+  "users": [
+    {
+      "username": "worker1",
+      "password_hash": "scrypt:32768:8:1$RntPATZEfzazI5IO$8a9515b71867b31267b69855f8d9cf9a6f078054095b395092e3ea333d4d6d1680c5b4e7e3832181e2cf6cd17d48bae4a0db8a6d38c65b500e2d1dc62bcfd7cd"
+    },
+    {
+      "username": "admin",
+      "password_hash": "scrypt:32768:8:1$RntPATZEfzazI5IO$8a9515b71867b31267b69855f8d9cf9a6f078054095b395092e3ea333d4d6d1680c5b4e7e3832181e2cf6cd17d48bae4a0db8a6d38c65b500e2d1dc62bcfd7cd"
+    },
+    {
+      "username": "gogogaga",
+      "password_hash": "scrypt:32768:8:1$1nSsIeg6o3Uw76Sv$d84f3184d922be8624d709430e46811d2036628fa3a3ab7a358ccbd5089a65dbe5a3af69d62316e1eb79f52be14760826537c94023e1d23064b111cbafb36fd1"
+    },
+    {
+      "username": "ooga booga",
+      "password_hash": "scrypt:32768:8:1$Q7m7fy23MdDIvNTE$c2712966364ba8f39696873b1a01812ed1c9610c47fb392864ba7899aa5bffd89a40a69b3c760da078b20d335f4d1a94e94f85eaa76cf70e58a13354bc6cc99a"
+    },
+    {
+      "username": "jordin",
+      "password_hash": "scrypt:32768:8:1$kp1mMgr4QBZHlTmG$d39113dc5775cf02bf77b1a6281fec6d0d84c2c507f0e384cd752c54013f608c8e2357acb932c0e20b44bcce043653ae32246b594a40a1dd6bcbbbd20be863bf"
+    }
+  ]
+}

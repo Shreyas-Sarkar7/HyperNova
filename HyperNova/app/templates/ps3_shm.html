@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}SHM Fatigue Estimation — Trackside{% endblock %}
+{% block content %}
+<h1>Structural Health Monitoring</h1>
+<p class="subtitle">NEBULA X PS3 &middot; upload stress/vibration CSVs, estimate cumulative fatigue damage (0&ndash;1 scale)</p>
+
+{% if error %}<p class="form-error">{{ error }}</p>{% endif %}
+
+<div class="auth-card" style="max-width:520px; margin: 1.5rem 0;">
+  <form method="post" enctype="multipart/form-data">
+    <label>Stress/vibration CSV file(s) &mdash; select all of them at once
+      <input type="file" name="data_files" accept=".csv" multiple required>
+    </label>
+    <button type="submit" class="btn-primary">Analyze</button>
+  </form>
+</div>
+
+{% if results %}
+<p class="section-label">Results</p>
+<a class="btn-primary" href="{{ download_url }}" download style="display:inline-block; margin: 4px 0 14px;">Download shm_predictions.csv</a>
+
+<div style="overflow-x:auto;">
+<table style="width:100%; border-collapse:collapse; font-size:13px;">
+  <thead>
+    <tr style="text-align:left; border-bottom:1px solid var(--line); color:var(--muted);">
+      <th style="padding:8px 10px;">File</th>
+      <th style="padding:8px 10px;">Cumulative damage proxy</th>
+      <th style="padding:8px 10px;">&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in results %}
+    <tr style="border-bottom:1px solid var(--line);">
+      <td style="padding:8px 10px; font-family:var(--mono);">{{ row.file_id }}</td>
+      <td style="padding:8px 10px; font-family:var(--mono);">{{ row.prediction }}</td>
+      <td style="padding:8px 10px;">
+        {% if row.prediction >= 0.7 %}
+        <span class="badge red"><span class="dot"></span>High</span>
+        {% elif row.prediction >= 0.3 %}
+        <span class="badge yellow"><span class="dot"></span>Moderate</span>
+        {% else %}
+        <span class="badge green"><span class="dot"></span>Low</span>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+<p class="empty" style="margin-top:10px;">Low/Moderate/High bands here are just a visual guide (0&ndash;0.3 / 0.3&ndash;0.7 / 0.7+), not an official threshold from the spec.</p>
+{% endif %}
+{% endblock %}

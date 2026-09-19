@@ -1,0 +1,28 @@
+{
+  "weights": {
+    "res_mean": 0.3673,
+    "res_p90": 0.3534,
+    "frac_hot": 0.3902,
+    "late_mean": 0.5228
+  },
+  "config": {
+    "late_frac": 0.4,
+    "res_thresh": 0.5,
+    "min_cars": 4,
+    "min_samples": 50
+  },
+  "features": [
+    "res_mean",
+    "res_p90",
+    "frac_hot",
+    "late_mean"
+  ],
+  "trained_on": [
+    "acv_case_01.xlsx",
+    "acv_case_02.xlsx",
+    "acv_case_03.xlsx",
+    "acv_case_04.xlsx",
+    "acv_case_05.xlsx",
+    "acv_case_06.xlsx"
+  ]
+}
